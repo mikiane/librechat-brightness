@@ -1,4 +1,5 @@
 version: 1.2.4
+
 cache: true
 
 # Custom interface configuration
@@ -69,8 +70,18 @@ registration:
   allowedDomains:
     - "brightness.fr"
 
-# Only these custom endpoints will be available in the UI
+# Disable built-in endpoints to avoid duplication
 endpoints:
+  openAI:
+    disabled: true
+  anthropic:
+    disabled: true
+  google:
+    disabled: true
+  plugins:
+    disabled: true
+
+# Custom endpoints available in the UI
   custom:
     - name: 'OpenAI'
       apiKey: '${OPENAI_API_KEY}'
