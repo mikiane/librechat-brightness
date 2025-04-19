@@ -12,6 +12,8 @@ cache: true
 
 # Custom interface configuration
 interface:
+  assistants: false
+  plugins: false
   customWelcome: "Welcome to LibreChat! Enjoy your experience."
   # Privacy policy settings
   privacyPolicy:
@@ -23,17 +25,17 @@ interface:
     externalUrl: 'https://librechat.ai/tos'
     openNewTab: true
     modalAcceptance: true
-    modalTitle: "Terms of Service for LibreChat"
+    modalTitle: "Terms of Service for BrightnessAI"
     modalContent: |
-      # Terms and Conditions for LibreChat
+      # Terms and Conditions for BrightnessAI
 
       *Effective Date: February 18, 2024*
 
-      Welcome to LibreChat, the informational website for the open-source AI chat platform, available at https://librechat.ai. These Terms of Service ("Terms") govern your use of our website and the services we offer. By accessing or using the Website, you agree to be bound by these Terms and our Privacy Policy, accessible at https://librechat.ai//privacy.
+      Welcome to BrightnessAI, the informational website for the open-source AI chat platform, available at https://BrightnessAI.ai. These Terms of Service ("Terms") govern your use of our website and the services we offer. By accessing or using the Website, you agree to be bound by these Terms and our Privacy Policy, accessible at https://BrightnessAI.ai//privacy.
 
       ## 1. Ownership
 
-      Upon purchasing a package from LibreChat, you are granted the right to download and use the code for accessing an admin panel for LibreChat. While you own the downloaded code, you are expressly prohibited from reselling, redistributing, or otherwise transferring the code to third parties without explicit permission from LibreChat.
+      Upon purchasing a package from BrightnessAI, you are granted the right to download and use the code for accessing an admin panel for BrightnessAI. While you own the downloaded code, you are expressly prohibited from reselling, redistributing, or otherwise transferring the code to third parties without explicit permission from BrightnessAI.
 
       ## 2. User Data
 
@@ -57,13 +59,11 @@ interface:
 
       ## 7. Contact Information
 
-      If you have any questions about these Terms, please contact us at contact@librechat.ai.
+      If you have any questions about these Terms, please contact us at contact@BrightnessAI.ai.
 
       By using the Website, you acknowledge that you have read these Terms of Service and agree to be bound by them.
 
   endpointsMenu: true
-  assistants: false
-  plugins: false
   modelSelect: true
   parameters: true
   sidePanel: true
