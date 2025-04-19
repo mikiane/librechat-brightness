@@ -1,12 +1,11 @@
 version: 1.2.4
-
 cache: true
 
 # Custom interface configuration
 interface:
   assistants: false
   plugins: false
-  agents: true
+  agents: false
   endpointsMenu: true
   modelSelect: true
   parameters: true
@@ -15,7 +14,7 @@ interface:
   prompts: true
   bookmarks: true
   multiConvo: true
-  customWelcome: "Welcome to BrightnessAI! Enjoy your experience."
+  customWelcome: "Welcome to LibreChat! Enjoy your experience."
 
   # Privacy policy settings
   privacyPolicy:
@@ -123,15 +122,15 @@ endpoints:
       titleModel: 'deepseek-chat'
       modelDisplayLabel: 'Deepseek'
 
-    # Uncomment to enable Grok endpoint if needed
-    # - name: 'Grok'
-    #   apiKey: '${GROK_API_KEY}'
-    #   baseURL: 'https://api.grok.com/v1'
-    #   models:
-    #     default:
-    #       - 'grok-1'
-    #       - 'grok-2'
-    #     fetch: false
-    #   titleConvo: true
-    #   titleModel: 'grok-1'
-    #   modelDisplayLabel: 'Grok'
+# Uncomment to enable Grok endpoint if needed
+#    - name: 'Grok'
+#      apiKey: '${GROK_API_KEY}'
+#      baseURL: 'https://api.grok.com/v1'
+#      models:
+#        default:
+#          - 'grok-1'
+#          - 'grok-2'
+#        fetch: false
+#      titleConvo: true
+#      titleModel: 'grok-1'
+#      modelDisplayLabel: 'Grok'
