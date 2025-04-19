@@ -70,15 +70,13 @@ registration:
   allowedDomains:
     - "brightness.fr"
 
-# Disable built-in endpoints to avoid duplication
+# Disable built-in AI endpoints to avoid duplication
 endpoints:
   openAI:
     disabled: true
   anthropic:
     disabled: true
   google:
-    disabled: true
-  plugins:
     disabled: true
 
 # Custom endpoints available in the UI
