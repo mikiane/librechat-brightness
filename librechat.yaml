@@ -79,6 +79,7 @@ registration:
 
 
 endpoints:
+  disableDefaultEndpoints: true
   custom:
     - name: 'OpenAI'
       apiKey: '${OPENAI_API_KEY}'
