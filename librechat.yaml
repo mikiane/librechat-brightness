@@ -1,12 +1,10 @@
 version: 1.2.4
 
-cache: true
-
-# Custom interface configuration
+# 1) Interface : masquer Assistants & Plugins, activer Agents
 interface:
-  assistants: false
-  plugins: false
-  agents: false
+  assistants: false        # cache le menu “Assistants” :contentReference[oaicite:6]{index=6}
+  plugins: false           # cache le menu “Plugins (Deprecated)” :contentReference[oaicite:7]{index=7}
+  agents: true             # affiche Agents :contentReference[oaicite:8]{index=8}
   endpointsMenu: true
   modelSelect: true
   parameters: true
@@ -15,131 +13,10 @@ interface:
   prompts: true
   bookmarks: true
   multiConvo: true
-  customWelcome: "Welcome to LibreChat! Enjoy your experience."
 
-  # Privacy policy settings
-  privacyPolicy:
-    externalUrl: 'https://librechat.ai/privacy-policy'
-    openNewTab: true
-
-  # Terms of service
-  termsOfService:
-    externalUrl: 'https://librechat.ai/tos'
-    openNewTab: true
-    modalAcceptance: true
-    modalTitle: "Terms of Service for BrightnessAI"
-    modalContent: |
-      # Terms and Conditions for BrightnessAI
-
-      *Effective Date: February 18, 2024*
-
-      Welcome to BrightnessAI, the informational website for the open-source AI chat platform, available at https://BrightnessAI.ai. These Terms of Service ("Terms") govern your use of our website and the services we offer. By accessing or using the Website, you agree to be bound by these Terms and our Privacy Policy, accessible at https://BrightnessAI.ai/privacy.
-
-      ## 1. Ownership
-
-      Upon purchasing a package from BrightnessAI, you are granted the right to download and use the code for accessing an admin panel for BrightnessAI. While you own the downloaded code, you are expressly prohibited from reselling, redistributing, or otherwise transferring the code to third parties without explicit permission from BrightnessAI.
-
-      ## 2. User Data
-
-      We collect personal data, such as your name, email address, and payment information, as described in our Privacy Policy. This information is collected to provide and improve our services, process transactions, and communicate with you.
-
-      ## 3. Non-Personal Data Collection
-
-      The Website uses cookies to enhance user experience, analyze site usage, and facilitate certain functionalities. By using the Website, you consent to the use of cookies in accordance with our Privacy Policy.
-
-      ## 4. Use of the Website
-
-      You agree to use the Website only for lawful purposes and in a manner that does not infringe the rights of, restrict, or inhibit anyone else's use and enjoyment of the Website. Prohibited behavior includes harassing or causing distress or inconvenience to any person, transmitting obscene or offensive content, or disrupting the normal flow of dialogue within the Website.
-
-      ## 5. Governing Law
-
-      These Terms shall be governed by and construed in accordance with the laws of the United States, without giving effect to any principles of conflicts of law.
-
-      ## 6. Changes to the Terms
-
-      We reserve the right to modify these Terms at any time. We will notify users of any changes by email. Your continued use of the Website after such changes have been notified will constitute your consent to such changes.
-
-      ## 7. Contact Information
-
-      If you have any questions about these Terms, please contact us at contact@BrightnessAI.ai.
-
-      By using the Website, you acknowledge that you have read these Terms of Service and agree to be bound by them.
-
-# Registration restricted to brightness.fr
+# 2) Restreindre les inscriptions au domaine brightness.fr
 registration:
   allowedDomains:
     - "brightness.fr"
 
-# Disable built-in AI endpoints to avoid duplication
-endpoints:
-  openAI:
-    disabled: true
-  anthropic:
-    disabled: true
-  google:
-    disabled: true
-
-# Custom endpoints available in the UI
-  custom:
-    - name: 'OpenAI'
-      apiKey: '${OPENAI_API_KEY}'
-      baseURL: 'https://api.openai.com/v1'
-      models:
-        default:
-          - 'gpt-4o'
-          - 'o1'
-          - '04-mini'
-          - 'o3'
-        fetch: false
-      titleConvo: true
-      titleModel: 'gpt-4o'
-      modelDisplayLabel: 'OpenAI'
-
-    - name: 'Gemini'
-      apiKey: '${GEMINI_API_KEY}'
-      baseURL: 'https://generativelanguage.googleapis.com/v1beta'
-      models:
-        default:
-          - 'gemini-pro'
-          - 'gemini-1.5-pro'
-        fetch: false
-      titleConvo: true
-      titleModel: 'gemini-pro'
-      modelDisplayLabel: 'Gemini'
-
-    - name: 'Anthropic'
-      apiKey: '${ANTHROPIC_API_KEY}'
-      baseURL: 'https://api.anthropic.com/v1'
-      models:
-        default:
-          - 'claude-3-opus-20240229'
-          - 'claude-3-sonnet-20240229'
-        fetch: false
-      titleConvo: true
-      titleModel: 'claude-3-sonnet-20240229'
-      modelDisplayLabel: 'Anthropic'
-
-    - name: 'Deepseek'
-      apiKey: '${DEEPSEEK_API_KEY}'
-      baseURL: 'https://api.deepseek.com/v1'
-      models:
-        default:
-          - 'deepseek-chat'
-          - 'deepseek-coder'
-        fetch: false
-      titleConvo: true
-      titleModel: 'deepseek-chat'
-      modelDisplayLabel: 'Deepseek'
-
-# Uncomment to enable Grok endpoint if needed
-#    - name: 'Grok'
-#      apiKey: '${GROK_API_KEY}'
-#      baseURL: 'https://api.grok.com/v1'
-#      models:
-#        default:
-#          - 'grok-1'
-#          - 'grok-2'
-#        fetch: false
-#      titleConvo: true
-#      titleModel: 'grok-1'
-#      modelDisplayLabel: 'Grok'
+# (Ne PAS ajouter de section `endpoints:` ici, .env gère la sélection)
