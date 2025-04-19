@@ -121,15 +121,15 @@ endpoints:
       titleModel: 'deepseek-chat'
       modelDisplayLabel: 'Deepseek'
 
-    - name: 'Grok'
-      apiKey: '${GROK_API_KEY}'
-      baseURL: 'https://api.grok.com/v1'
-      models:
-        default: ['grok-1', 'grok-2']
-        fetch: false
-      titleConvo: true
-      titleModel: 'grok-1'
-      modelDisplayLabel: 'Grok'
+#    - name: 'Grok'
+#      apiKey: '${GROK_API_KEY}'
+#      baseURL: 'https://api.grok.com/v1'
+#      models:
+#        default: ['grok-1', 'grok-2']
+#        fetch: false
+#      titleConvo: true
+#      titleModel: 'grok-1'
+#      modelDisplayLabel: 'Grok'
 
 
 # Example Balance settings
