@@ -19,3 +19,14 @@ registration:
   allowedDomains:
     - "brightness.fr"
 
+endpoints:
+  custom:
+    - name: "Perplexity"
+      apiKey: "${PERPLEXITY_API_KEY}"
+      baseURL: "https://api.perplexity.ai/"
+      models:
+        default:
+          ["sonar-deep-research","sonar-reasoning-pro","sonar-reasoning","sonar-pro","sonar","r1-1776"]
+        fetch: false
+      titleConvo: true
+      titleModel: "sonar-pro"
