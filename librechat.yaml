@@ -18,5 +18,17 @@ interface:
 registration:
   allowedDomains:
     - "brightness.fr"
-
+    
 # (Ne PAS ajouter de section `endpoints:` ici, .env gère la sélection)
+mcpServers:
+  perplexity-ask:
+    type: stdio                   # <— force STDIO transport :contentReference[oaicite:1]{index=1}
+    command: "docker"             # on lance le processus dans le conteneur
+    args:
+      - "exec"
+      - "-i"
+      - "perplexity-ask"          # nom du conteneur Docker MCP
+      - "node"
+      - "/app/dist/index.js"      # chemin vers l’exécutable MCP server
+    timeout: 30000                # délai max pour chaque requête en ms
+    initTimeout: 10000            # délai max pour l’initialisation en ms
