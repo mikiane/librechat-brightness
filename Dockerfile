@@ -39,11 +39,7 @@ RUN mkdir -p /app/client/public/images /app/api/logs
 # Node API setup
 EXPOSE 3080
 ENV HOST=0.0.0.0
-# Installer Docker CLI dans Alpine
-RUN apk update \
- && apk add --no-cache docker-cli         # installe le binaire 'docker' {{turn0search1}}
-        
-
+# Installer Docker CLI dans Alpin
 
 CMD ["npm", "run", "backend"]
 
