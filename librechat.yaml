@@ -21,13 +21,8 @@ registration:
 
 mcpServers:
   perplexity-ask:
-    type: stdio                   # forcer STDIO transport {{turn0search0}}
-    command: "docker"             # ou "node" si vous intégrez le code directement
-    args:
-      - "exec"
-      - "-i"
-      - "perplexity-ask"
-      - "node"
-      - "/app/dist/index.js"
+    type: sse                            # mode Server‑Sent Events :contentReference[oaicite:7]{index=7}
+    url: http://perplexity-ask:8081/sse  # nom de service Docker ou host.docker.internal si sur Docker Desktop :contentReference[oaicite:8]{index=8}
     timeout: 30000
     initTimeout: 10000
+
