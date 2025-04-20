@@ -39,6 +39,12 @@ RUN mkdir -p /app/client/public/images /app/api/logs
 # Node API setup
 EXPOSE 3080
 ENV HOST=0.0.0.0
+
+RUN apt-get update \
+ && apt-get install -y docker.io \
+ && rm -rf /var/lib/apt/lists/*            
+
+
 CMD ["npm", "run", "backend"]
 
 # Optional: for client with nginx routing
