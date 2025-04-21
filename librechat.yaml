@@ -36,3 +36,10 @@ ocr:
   apiKey: "${OCR_API_KEY}"       # Fait référence à la variable d'environnement
   baseURL: "${OCR_BASEURL}"      # Fait référence à la variable d'environnement
   mistralModel: "mistral-ocr-latest"  # Optionnel
+
+fileConfig:
+  serverFileSizeLimit: 250 # en Mo (max total)
+  endpoints:
+    default:
+      fileSizeLimit: 25    # max par fichier (Mo)
+      totalSizeLimit: 90   # par envoi
