@@ -30,3 +30,9 @@ endpoints:
         fetch: false
       titleConvo: true
       titleModel: "sonar-pro"
+
+ocr:
+  strategy: "mistral_ocr"
+  apiKey: "${OCR_API_KEY}"       # Fait référence à la variable d'environnement
+  baseURL: "${OCR_BASEURL}"      # Fait référence à la variable d'environnement
+  mistralModel: "mistral-ocr-latest"  # Optionnel
