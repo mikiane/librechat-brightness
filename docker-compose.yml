@@ -73,7 +73,7 @@ services:
     image: python:3.10-slim
     working_dir: /app
     volumes:
-      - /home/michel//brightness-chat/LibreChat/mcp-servers/fetchpage:/app:ro
+      - /home/michel/brightness-chat/LibreChat/mcp-servers/fetchpage:/app:ro
     command: >
       sh -c "pip install --no-cache-dir fastmcp mcp httpx playwright &&
              python mcp_server.py"
@@ -82,7 +82,11 @@ services:
 
 networks:
   backend:
-    external: true interne si vous créez le réseau ici
+    external: true
+
+
+
+
 
 volumes:
   pgdata2:
