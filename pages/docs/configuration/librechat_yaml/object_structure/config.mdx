@@ -1,0 +1,390 @@
+# Config Structure
+
+**Note:** Fields not specifically mentioned as required are optional.
+
+## version
+- **required** 
+
+<OptionTable
+  options={[
+    ['version', 'String', 'Specifies the version of the configuration file.', 'version: 1.0.8' ],
+  ]}
+/>
+
+## cache
+
+<OptionTable
+  options={[
+    ['cache', 'Boolean', 'Toggles caching on or off. Set to `true` to enable caching (default).', 'cache: true' ],
+  ]}
+/>
+
+## fileStrategy
+
+<OptionTable
+  options={[
+    ['fileStrategy', 'String', 'Determines where to save user uploaded/generated files. Defaults to `"local"` if omitted.', 'fileStrategy: "firebase"' ],
+  ]}
+/>
+
+## filteredTools
+
+<OptionTable
+  options={[
+    ['filteredTools', 'Array of Strings', 'Filters out specific tools from both Plugins and OpenAI Assistants endpoints.', 'filteredTools: ["scholarai", "calculator"]' ],
+  ]}
+/>
+
+- **Notes**:
+    - If `includedTools` and `filteredTools` are both specified, only `includedTools` will be recognized.
+    - Affects both `gptPlugins` and `assistants` endpoints
+    - You can find the names of the tools to filter in [`api/app/clients/tools/manifest.json`](https://github.com/danny-avila/LibreChat/blob/main/api/app/clients/tools/manifest.json)
+        - Use the `pluginKey` value
+    - Also, any listed under the ".well-known" directory [`api/app/clients/tools/.well-known`](https://github.com/danny-avila/LibreChat/blob/main/api/app/clients/tools/.well-known)
+        - Use the `name_for_model` value
+
+## includedTools
+
+<OptionTable
+  options={[
+    ['includedTools', 'Array of Strings', 'Includes specific tools from both Plugins and OpenAI Assistants endpoints.', 'includedTools: ["calculator"]' ],
+  ]}
+/>
+
+- **Notes**:
+    - If `includedTools` and `filteredTools` are both specified, only `includedTools` will be recognized.
+    - Affects both `gptPlugins` and `assistants` endpoints
+    - You can find the names of the tools to filter in [`api/app/clients/tools/manifest.json`](https://github.com/danny-avila/LibreChat/blob/main/api/app/clients/tools/manifest.json)
+        - Use the `pluginKey` value
+    - Also, any listed under the ".well-known" directory [`api/app/clients/tools/.well-known`](https://github.com/danny-avila/LibreChat/blob/main/api/app/clients/tools/.well-known)
+        - Use the `name_for_model` value
+
+## secureImageLinks
+
+<OptionTable
+  options={[
+    ['secureImageLinks', 'Boolean', 'Whether or not to secure access to image links that are hosted locally by the app. Default: false.', 'secureImageLinks: true' ],
+  ]}
+/>
+
+## imageOutputType
+
+- **Note**: Case-sensitive. Google endpoint only supports "jpeg" and "png" output types.
+- **Options**: "png" | "webp" | "jpeg"
+
+<OptionTable
+  options={[
+    ['imageOutputType', 'String', 'The image output type for image responses. Defaults to "png" if omitted.', 'imageOutputType: "webp"' ],
+  ]}
+/>
+
+## ocr
+
+**Key:**
+<OptionTable
+  options={[
+    ['ocr', 'Object', 'Configures Optical Character Recognition (OCR) settings for extracting text from images.', ''],
+  ]}
+/>
+
+**Subkeys:**
+<OptionTable
+  options={[
+    ['apiKey', 'String', 'The API key for the OCR service.', ''],
+    ['baseURL', 'String', 'The base URL for the OCR service API.', ''],
+    ['strategy', 'String', 'The OCR strategy to use. Options are "mistral_ocr" or "custom_ocr".', ''],
+    ['mistralModel', 'String', 'The Mistral model to use for OCR processing.', ''],
+  ]}
+/>
+
+see: [OCR Config Object Structure](/docs/configuration/librechat_yaml/object_structure/ocr)
+
+## fileConfig
+
+**Key:**
+<OptionTable
+  options={[
+    ['fileConfig', 'Object', 'Configures file handling settings for the application, including size limits and MIME type restrictions.', ''],
+  ]}
+/>
+
+**Subkeys:**
+<OptionTable
+  options={[
+    ['endpoints', 'Record/Object', 'Specifies file handling configurations for individual endpoints, allowing customization per endpoint basis.', ''],
+    ['serverFileSizeLimit', 'Number', 'The maximum file size (in MB) that the server will accept. Applies globally across all endpoints unless overridden by endpoint-specific settings.', ''],
+    ['avatarSizeLimit', 'Number', 'Maximum size (in MB) for user avatar images.', ''],
+  ]}
+/>
+
+see: [File Config Object Structure](/docs/configuration/librechat_yaml/object_structure/file_config)
+
+## rateLimits
+
+**Key:**
+<OptionTable
+  options={[
+    ['rateLimits', 'Object', 'Defines rate limiting policies to prevent abuse by limiting the number of requests.', ''],
+  ]}
+/>
+
+**Subkeys:**
+<OptionTable
+  options={[
+    ['fileUploads', 'Object', 'Configures rate limits specifically for file upload operations.', ''],
+    ['conversationsImport', 'Object', 'Configures rate limits specifically for conversation import operations.', ''],
+    ['stt', 'Object', 'Configures rate limits specifically for speech-to-text (stt) requests', ''],
+    ['tts', 'Object', 'Configures rate limits specifically for text-to-speech (tts) requests', ''],
+  ]}
+/>
+
+**fileUploads Subkeys:**
+<OptionTable
+  options={[
+    ['ipMax', 'Number', 'Maximum number of uploads allowed per IP address per window.', ''],
+    ['ipWindowInMinutes', 'Number', 'Time window in minutes for the IP-based upload limit.', ''],
+    ['userMax', 'Number', 'Maximum number of uploads allowed per user per window.', ''],
+    ['userWindowInMinutes', 'Number', 'Time window in minutes for the user-based upload limit.', ''],
+  ]}
+/>
+
+**conversationsImport Subkeys:**
+<OptionTable
+  options={[
+    ['ipMax', 'Number', 'Maximum number of imports allowed per IP address per window.', ''],
+    ['ipWindowInMinutes', 'Number', 'Time window in minutes for the IP-based imports limit.', ''],
+    ['userMax', 'Number', 'Maximum number of imports per user per window.', ''],
+    ['userWindowInMinutes', 'Number', 'Time window in minutes for the user-based imports limit.', ''],
+  ]}
+/>
+
+**tts Subkeys:**
+<OptionTable
+  options={[
+    ['ipMax', 'Number', 'Maximum number of requests allowed per IP address per window.', ''],
+    ['ipWindowInMinutes', 'Number', 'Time window in minutes for the IP-based requests limit.', ''],
+    ['userMax', 'Number', 'Maximum number of requests per user per window.', ''],
+    ['userWindowInMinutes', 'Number', 'Time window in minutes for the user-based requests limit.', ''],
+  ]}
+/>
+
+**stt Subkeys:**
+<OptionTable
+  options={[
+    ['ipMax', 'Number', 'Maximum number of requests allowed per IP address per window.', ''],
+    ['ipWindowInMinutes', 'Number', 'Time window in minutes for the IP-based requests limit.', ''],
+    ['userMax', 'Number', 'Maximum number of requests per user per window.', ''],
+    ['userWindowInMinutes', 'Number', 'Time window in minutes for the user-based requests limit.', ''],
+  ]}
+/>
+
+    - **Example**:
+    ```yaml filename="rateLimits"
+    rateLimits:
+      fileUploads:
+        ipMax: 100
+        ipWindowInMinutes: 60
+        userMax: 50
+        userWindowInMinutes: 60
+      conversationsImport:
+        ipMax: 100
+        ipWindowInMinutes: 60
+        userMax: 50
+        userWindowInMinutes: 60
+      stt:
+        ipMax: 100
+        ipWindowInMinutes: 1
+        userMax: 50
+        userWindowInMinutes: 1
+      tts:
+        ipMax: 100
+        ipWindowInMinutes: 1
+        userMax: 50
+        userWindowInMinutes: 1
+    ```
+
+## registration
+
+**Key:**
+<OptionTable
+  options={[
+    ['registration', 'Object', 'Configures registration-related settings for the application.', ''],
+  ]}
+/>
+
+**Subkeys:**
+<OptionTable
+  options={[
+    ['socialLogins', '', 'Social login configurations.', ''],
+    ['allowedDomains', '', 'Specifies allowed domains for registration.', ''],
+  ]}
+/>
+
+see also: 
+- [socialLogins](/docs/configuration/librechat_yaml/object_structure/registration#sociallogins),
+- [alloweddomains](/docs/configuration/librechat_yaml/object_structure/registration#alloweddomains),
+- [Registration Object Structure](/docs/configuration/librechat_yaml/object_structure/registration)
+
+## actions
+
+**Key:**
+<OptionTable
+  options={[
+    ['actions', 'Object', 'Configures actions-related settings, used by Agents and Assistants', ''],
+  ]}
+/>
+
+**Subkeys:**
+<OptionTable
+  options={[
+    ['allowedDomains', '', 'Specifies allowed domains for actions.', ''],
+  ]}
+/>
+
+see also: 
+- [alloweddomains](/docs/configuration/librechat_yaml/object_structure/actions#alloweddomains),
+- [Actions Object Structure](/docs/configuration/librechat_yaml/object_structure/actions)
+
+## interface
+
+**Key:**
+<OptionTable
+  options={[
+    ['interface', 'Object', 'Configures user interface elements within the application, allowing for customization of visibility and behavior of various components.', ''],
+  ]}
+/>
+
+**Subkeys:**
+<OptionTable
+  options={[
+    ['privacyPolicy', 'Object', 'Contains settings related to the privacy policy link provided.', ''],
+    ['termsOfService', 'Object', 'Contains settings related to the terms of service link provided.', ''],
+    ['endpointsMenu', 'Boolean', 'Controls the visibility of the endpoints dropdown menu.', ''],
+    ['modelSelect', 'Boolean', 'Determines whether the model selection feature is available.', ''],
+    ['parameters', 'Boolean', 'Toggles the visibility of parameter configuration options AKA conversation settings.', ''],
+    ['sidePanel', 'Boolean', 'Controls the visibility of the right-most side panel.', ''],
+    ['presets', 'Boolean', 'Enables or disables the presets menu', ''],
+    ['prompts', 'Boolean', 'Enables or disables all prompt-related features for all users', ''],
+    ['bookmarks', 'Boolean', 'Enables or disables all bookmarks-related features for all users', ''],
+    ['multiConvo', 'Boolean', 'Enables or disables all "multi convo", AKA multiple response streaming, related features for all users', ''],
+    ['agents', 'Boolean', 'Enables or disables all agents features for all users', ''],
+  ]}
+/>
+
+see: [Interface Object Structure](/docs/configuration/librechat_yaml/object_structure/interface)
+
+## modelSpecs
+
+**Key:**
+<OptionTable
+  options={[
+    ['modelSpecs', 'Object', 'Configures model specifications, allowing for detailed setup and customization of AI models and their behaviors within the application.', ''],
+  ]}
+/>
+
+**Subkeys:**
+<OptionTable
+  options={[
+    ['enforce', 'Boolean', 'Determines whether the model specifications should strictly override other configuration settings.', ''],
+    ['prioritize', 'Boolean', 'Specifies if model specifications should take priority over the default configuration when both are applicable.', ''],
+    ['list', 'Array of Objects', 'Contains a list of individual model specifications detailing various configurations and behaviors.', ''],
+  ]}
+/>
+
+see: [Model Specs Object Structure](/docs/configuration/librechat_yaml/object_structure/model_specs)
+
+## endpoints
+
+**Key:**
+<OptionTable
+  options={[
+    ['endpoints', 'Object', 'Defines custom API endpoints for the application.', ''],
+  ]}
+/>
+
+**Subkeys:**
+<OptionTable
+  options={[
+    ['custom', 'Array of Objects', 'Each object in the array represents a unique endpoint configuration.', ''],
+    ['azureOpenAI', 'Object', 'Azure OpenAI endpoint-specific configuration', ''],
+    ['assistants', 'Object', 'Assistants endpoint-specific configuration.', ''],
+    ['azureAssistants', 'Object', 'Azure Assistants endpoint-specific configuration.', ''],
+    ['agents', 'Object', 'Agents endpoint-specific configuration.', ''],
+  ]}
+/>
+
+## mcpServers
+
+**Key:**
+<OptionTable
+  options={[
+    ['mcpServers', 'Object', 'Defines the configuration for Model Context Protocol (MCP) servers, allowing dynamic integration of MCP servers within the application.', ''],
+  ]}
+/>
+
+**Subkeys:**
+<OptionTable
+  options={[
+    ['<serverName>', 'Object', 'Each key under `mcpServers` represents an individual MCP server configuration, identified by a unique name.', ''],
+  ]}
+/>
+
+- **Notes**:
+  - Initialization happens at startup, and the app must be restarted for changes to take effect.
+  - The `<serverName>` is a unique identifier for each MCP server configuration.
+  - Each MCP server can be configured using one of three connection types:
+    - `stdio`
+    - `websocket`
+    - `sse`
+  - The `type` field specifies the connection type to the MCP server.
+  - If `type` is omitted, it defaults based on the presence and format of `url` or `command`:
+    - If `url` is specified and starts with `http` or `https`, `type` defaults to `sse`.
+    - If `url` is specified and starts with `ws` or `wss`, `type` defaults to `websocket`.
+    - If `command` is specified, `type` defaults to `stdio`.
+  - Additional configuration options include:
+    - `timeout`: Timeout in milliseconds for MCP server requests. Determines how long to wait for a response for tool requests.
+    - `initTimeout`: Timeout in milliseconds for MCP server initialization. Determines how long to wait for the server to initialize.
+  - see: [MCP Servers Object Structure](/docs/configuration/librechat_yaml/object_structure/mcp_servers)
+
+**Example:**
+
+```yaml filename="mcpServers"
+mcpServers:
+  everything:
+    # type: sse # type can optionally be omitted
+    url: http://localhost:3001/sse
+    timeout: 30000
+    initTimeout: 10000
+  puppeteer:
+    type: stdio
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-puppeteer"
+    timeout: 30000
+    initTimeout: 10000
+  filesystem:
+    # type: stdio
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-filesystem"
+      - /home/user/LibreChat/
+    iconPath: /home/user/LibreChat/client/public/assets/logo.svg
+  mcp-obsidian:
+    command: npx
+    args:
+      - -y
+      - "mcp-obsidian"
+      - /path/to/obsidian/vault
+```
+
+see: [MCP Servers Object Structure](/docs/configuration/librechat_yaml/object_structure/mcp_servers)
+
+## Additional links
+- [AWS Bedrock Object Structure](/docs/configuration/librechat_yaml/object_structure/aws_bedrock)
+- [Custom Endpoint Object Structure](/docs/configuration/librechat_yaml/object_structure/custom_endpoint)
+- [Azure OpenAI Endpoint Object Structure](/docs/configuration/librechat_yaml/object_structure/azure_openai)
+- [Assistants Endpoint Object Structure](/docs/configuration/librechat_yaml/object_structure/assistants_endpoint)
+- [Agents](/docs/configuration/librechat_yaml/object_structure/agents)
+- [OCR Config Object Structure](/docs/configuration/librechat_yaml/object_structure/ocr)
