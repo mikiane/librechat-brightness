@@ -69,5 +69,15 @@ services:
     env_file:
       - .env
 
+  fetchpage:
+    build: ./mcp-servers/fetchpage
+    command: python mcp_server.py
+    # ... autres configs (ports, volumes) ...
+    networks:
+      - backend
+
+networks:
+  backend:
+
 volumes:
   pgdata2:

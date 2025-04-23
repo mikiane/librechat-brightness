@@ -46,5 +46,5 @@ fileConfig:
 
 mcpServers:
   scraper:
-    url: http://localhost:27124/sse
+    url: http://fetchpage:27124/sse
     timeout: 60000
