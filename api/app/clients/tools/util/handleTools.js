@@ -28,6 +28,16 @@ const { createMCPTool } = require('~/server/services/MCP');
 const { loadSpecs } = require('./loadSpecs');
 const { logger } = require('~/config');
 
+manifestToolMap['browser-scraper'] = {
+  pluginKey: 'browser-scraper',
+  name: 'Browser Scraper',
+  description: 'Scrape HTML content from static websites.',
+  icon: 'https://example.com/icon.png', // ou null
+  isAuthRequired: false,
+  authConfig: [],
+};
+
+
 const mcpToolPattern = new RegExp(`^.+${Constants.mcp_delimiter}.+$`);
 
 /**
