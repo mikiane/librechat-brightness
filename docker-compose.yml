@@ -70,12 +70,10 @@ services:
       - .env
 
   fetchpage:
-    image: python:3.10-slim              # ← Image officielle Python, pas de Dockerfile requis :contentReference[oaicite:2]{index=2}
-    container_name: fetchpage
-    working_dir: /app                     # Répertoire de travail dans le conteneur
+    image: python:3.10-slim
+    working_dir: /app
     volumes:
-      - ./mcp-servers/fetchpage:/app:ro
-    # Bind-mount en lecture seule (:ro) pour sécuriser votre code local :contentReference[oaicite:3]{index=3}
+      - /home/michel//brightness-chat/LibreChat/mcp-servers/fetchpage:/app:ro
     command: >
       sh -c "pip install --no-cache-dir fastmcp mcp httpx playwright &&
              python mcp_server.py"
@@ -84,7 +82,7 @@ services:
 
 networks:
   backend:
-    external: true  # ou interne si vous créez le réseau ici
+    external: true interne si vous créez le réseau ici
 
 volumes:
   pgdata2:
