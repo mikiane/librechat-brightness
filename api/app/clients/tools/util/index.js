@@ -18,7 +18,6 @@ const TraversaalSearch       = require('./TraversaalSearch');
 const StructuredWolfram      = require('./StructuredWolfram');
 const { createYouTubeTools } = require('./YouTubeTools');
 const TavilySearchResults    = require('./TavilySearchResults');
-const BrowserScraper         = require('../structured/BrowserScraper'); // ← votre nouvel outil
 
 // 4. Déclaration de la liste des outils disponibles
 const availableTools = [
@@ -26,15 +25,6 @@ const availableTools = [
   { pluginKey: 'google',            name: 'Google Search',           description: 'Search the web',  icon: null, isAuthRequired: false, authConfig: [] },
   { pluginKey: 'open_weather',      name: 'OpenWeather',             description: 'Weather data',    icon: null, isAuthRequired: false, authConfig: [] },
   // …
-  // Et enfin l’entrée pour BrowserScraper :
-  {
-    pluginKey:   'browser-scraper',
-    name:        'Browser Scraper',
-    description: 'Scrape HTML from static web pages',
-    icon:        'https://example.com/icon.png',
-    isAuthRequired: false,
-    authConfig:     [],
-  },
 ];
 
 // 5. Déclaration du manifest (mappage clé → métadonnées)
@@ -63,5 +53,4 @@ module.exports = {
   StructuredWolfram,
   createYouTubeTools,
   TavilySearchResults,
-  BrowserScraper,
 };

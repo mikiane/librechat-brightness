@@ -1,4 +1,3 @@
-const BrowserScraper = require('../structured/BrowserScraper'); // ✅ en haut du fichier
 const { Tools, Constants } = require('librechat-data-provider');
 const { SerpAPI } = require('@langchain/community/tools/serpapi');
 const { Calculator } = require('@langchain/community/tools/calculator');
@@ -28,14 +27,7 @@ const { createMCPTool } = require('~/server/services/MCP');
 const { loadSpecs } = require('./loadSpecs');
 const { logger } = require('~/config');
 
-manifestToolMap['browser-scraper'] = {
-  pluginKey: 'browser-scraper',
-  name: 'Browser Scraper',
-  description: 'Scrape HTML content from static websites.',
-  icon: 'https://example.com/icon.png', // ou null
-  isAuthRequired: false,
-  authConfig: [],
-};
+
 
 
 const mcpToolPattern = new RegExp(`^.+${Constants.mcp_delimiter}.+$`);
@@ -166,7 +158,6 @@ const loadTools = async ({
     'azure-ai-search': StructuredACS,
     traversaal_search: TraversaalSearch,
     tavily_search_results_json: TavilySearchResults,
-    'browser-scraper': BrowserScraper, // ✅ ajout ici
   };
   
 
