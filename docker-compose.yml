@@ -70,14 +70,15 @@ services:
       - .env
 
   fetchpage:
-    build: /home/michel/mcp-servers/fetchpage/
+    build: /home/michel/mcp-servers/fetchpage
     command: python mcp_server.py
-    # ... autres configs (ports, volumes) ...
     networks:
-      - backend
+      - defaultnet
 
 networks:
-  backend:
+  defaultnet:
+    external:
+      name: librechat_backend
 
 volumes:
   pgdata2:
