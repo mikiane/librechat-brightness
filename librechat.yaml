@@ -3,7 +3,7 @@ version: 1.2.4
 # 1) Interface : masquer Assistants & Plugins, activer Agents
 interface:
   assistants: true        # cache le menu “Assistants” :contentReference[oaicite:6]{index=6}
-  plugins: false           # cache le menu “Plugins (Deprecated)” :contentReference[oaicite:7]{index=7}
+  plugins: true           # cache le menu “Plugins (Deprecated)” :contentReference[oaicite:7]{index=7}
   agents: true             # affiche Agents :contentReference[oaicite:8]{index=8}
   endpointsMenu: true
   modelSelect: true
