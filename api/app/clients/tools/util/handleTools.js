@@ -1,3 +1,4 @@
+const BrowserScraper = require('../structured/BrowserScraper'); // ✅ en haut du fichier
 const { Tools, Constants } = require('librechat-data-provider');
 const { SerpAPI } = require('@langchain/community/tools/serpapi');
 const { Calculator } = require('@langchain/community/tools/calculator');
@@ -18,6 +19,7 @@ const {
   StructuredWolfram,
   createYouTubeTools,
   TavilySearchResults,
+
 } = require('../');
 const { primeFiles: primeCodeFiles } = require('~/server/services/Files/Code/process');
 const { createFileSearchTool, primeFiles: primeSearchFiles } = require('./fileSearch');
@@ -154,7 +156,9 @@ const loadTools = async ({
     'azure-ai-search': StructuredACS,
     traversaal_search: TraversaalSearch,
     tavily_search_results_json: TavilySearchResults,
+    'browser-scraper': BrowserScraper, // ✅ ajout ici
   };
+  
 
   const customConstructors = {
     serpapi: async () => {
