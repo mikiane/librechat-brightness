@@ -313,3 +313,11 @@ module.exports = {
   validateTools,
   loadTools,
 };
+
+
+const BrowserScraper = require('./structured/BrowserScraper');
+
+const toolConstructors = {
+  // autres outils...
+  'browser-scraper': BrowserScraper,
+};
