@@ -38,8 +38,6 @@ services:
       - ./client/public/assets/apple-touch-icon-180x180.png:/app/client/dist/assets/apple-touch-icon-180x180.png
       - ./client/public/assets/maskable-icon.png:/app/client/public/assets/maskable-icon.png
       - ./client/public/assets/maskable-icon.png:/app/client/dist/assets/maskable-icon.png
-      - ./client/manifest.webmanifest:/app/client/dist/manifest.webmanifest
-      - ./client/new_index.html:/app/client/dist/index.html
 
   mongodb:
     container_name: chat-mongodb
