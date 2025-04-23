@@ -70,7 +70,7 @@ services:
       - .env
 
   fetchpage:
-    build: ./mcp-servers/fetchpage
+    build: /home/michel/mcp-servers/fetchpage/
     command: python mcp_server.py
     # ... autres configs (ports, volumes) ...
     networks:
