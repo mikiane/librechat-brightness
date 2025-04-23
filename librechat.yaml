@@ -43,3 +43,8 @@ fileConfig:
     default:
       fileSizeLimit: 25    # max par fichier (Mo)
       totalSizeLimit: 90   # par envoi
+
+mcpServers:
+  scraper:
+    url: http://localhost:27124/sse
+    timeout: 60000
