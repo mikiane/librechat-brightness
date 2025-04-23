@@ -1,0 +1,23 @@
+Exécution du serveur
+- Mode stdio pour le développement
+Exécutez votre serveur en local avec la commande :
+mcp run mcp_server.py
+
+Cette commande lance le serveur en mode stdio, utile pour tester via fastmcp dev ou un client local 
+
+
+- Mode SSE pour la production
+Pour un déploiement distant, préférez le transport SSE :
+mcp run mcp_server.py --transport http --host 0.0.0.0 --port 27124
+Le serveur exposera alors un endpoint SSE accessible depuis LibreChat ou tout autre client compatible 
+
+Config  LibreChat
+
+
+librechat.yaml
+
+mcpServers:
+  scraper:
+    url: http://localhost:27124/sse
+    timeout: 60000
+    iconPath: "/icons/scraper.svg"
