@@ -52,7 +52,6 @@ endpoints:
       baseURL: "https://api.perplexity.ai/"
       models:
         default: [
-          "sonar-deep-research",
           "sonar-reasoning-pro",
           "sonar-reasoning",
           "sonar-pro",
