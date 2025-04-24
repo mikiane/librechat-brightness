@@ -32,7 +32,7 @@ endpoints:
           - "sonar-pro"
           - "sonar"
           - "r1-1776"
-        fetch: false
+        fetch: true
       titleConvo: true
       titleModel: "sonar-pro"
 
