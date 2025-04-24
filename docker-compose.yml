@@ -21,19 +21,14 @@ services:
       - RAG_PORT=${RAG_PORT:-8000}
       - RAG_API_URL=http://rag_api:${RAG_PORT:-8000}
     volumes:
-      - ./images:/client/public/images
-      - ./.env:/.env
-      - ./librechat.yaml:/librechat.yaml
-      - ./uploads:/uploads
-      - ./logs:/api/logs
-      - ./client/public/assets/logo.svg:/client/public/assets/logo.svg
-      - ./client/public/assets/favicon-16x16.png:/client/public/assets/favicon-16x16.png
-      - ./client/public/assets/favicon-32x32.png:/client/public/assets/favicon-32x32.png
-      - ./client/public/assets/logo.svg:/client/dist/assets/logo.svg
-      - ./client/public/assets/favicon-16x16.png:/client/dist/assets/favicon-16x16.png
-      - ./client/public/assets/favicon-32x32.png:/client/dist/assets/favicon-32x32.png
-      - ./client/public/assets/apple-touch-icon-180x180.png:/client/public/assets/apple-touch-icon-180x180.png
-      - ./client/public/assets/apple-touch-icon-180x180.png:/client/dist/assets/apple-touch-icon-180x180.png
+      - ./client/public/assets/logo.svg:/app/client/public/assets/logo.svg
+      - ./client/public/assets/favicon-16x16.png:/app/client/public/assets/favicon-16x16.png
+      - ./client/public/assets/favicon-32x32.png:/app/client/public/assets/favicon-32x32.png
+      - ./client/public/assets/logo.svg:/app/client/dist/assets/logo.svg
+      - ./client/public/assets/favicon-16x16.png:/app/client/dist/assets/favicon-16x16.png
+      - ./client/public/assets/favicon-32x32.png:/app/client/dist/assets/favicon-32x32.png
+      - ./client/public/assets/apple-touch-icon-180x180.png:/app/client/public/assets/apple-touch-icon-180x180.png
+      - ./client/public/assets/apple-touch-icon-180x180.png:/app/client/dist/assets/apple-touch-icon-180x180.png
       - ./client/public/assets/maskable-icon.png:/client/public/assets/maskable-icon.png
       - ./client/public/assets/maskable-icon.png:/client/dist/assets/maskable-icon.png
 
