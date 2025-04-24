@@ -22,8 +22,8 @@ services:
       - RAG_API_URL=http://rag_api:${RAG_PORT:-8000}
     volumes:
       - ./images:/app/client/public/images
-      - ./.env:/app/.env
-      - ./librechat.yaml:/app/librechat.yaml
+      - ./.env:/.env
+      - ./librechat.yaml:/librechat.yaml
       - ./uploads:/app/uploads
       - ./logs:/app/api/logs
       - ./client/public/assets/logo.svg:/app/client/public/assets/logo.svg
