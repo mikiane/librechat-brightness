@@ -4,25 +4,24 @@
 
 set -euo pipefail
 
-### CONFIGURATION – à adapter si besoin ###
+### CONFIGURATION – adapté à votre environnement ###
 
-# Répertoire parent où stocker les backups
-# (par défaut : /var/backups/librechat, modifiable via la variable d'env BACKUP_BASE_DIR)
+# Répertoire où stocker les backups
 BACKUP_BASE_DIR="${BACKUP_BASE_DIR:-/var/backups/librechat}"
 
 # Noms des conteneurs Docker
 MONGO_CONTAINER="${MONGO_CONTAINER:-chat-mongodb}"
 PG_CONTAINER="${PG_CONTAINER:-vectordb}"
 
-# Paramètres PostgreSQL (récupérés si définis en env)
+# Paramètres PostgreSQL (on suppose que ces variables sont définies dans votre .env)
 PG_USER="${PG_USER:-$POSTGRES_USER}"
 PG_DB="${PG_DB:-$POSTGRES_DB}"
 PG_PASSWORD="${PG_PASSWORD:-$POSTGRES_PASSWORD}"
 
-# Volumes Docker à sauvegarder (modifier la liste selon vos volumes)
+# Volumes Docker à sauvegarder (modifiez la liste si vous en avez d’autres)
 VOLUMES=("librechat_uploads")
 
-# Fichiers de config à copier
+# Fichiers de config à copier (dans la racine de votre projet)
 CONFIG_FILES=(".env" "docker-compose.yml")
 
 # Rétention : supprimer les backups de plus de N jours (mettre 0 pour désactiver)
@@ -46,7 +45,6 @@ docker exec -i "$MONGO_CONTAINER" \
 
 # 2. Sauvegarde PostgreSQL vectordb
 echo "  • Sauvegarde PostgreSQL ($PG_CONTAINER)…"
-# On passe le mot de passe via PGPASSWORD pour pg_dump
 docker exec -i "$PG_CONTAINER" /bin/bash -c \
   "export PGPASSWORD='$PG_PASSWORD'; pg_dump --username='$PG_USER' --dbname='$PG_DB'" \
   > "$BACKUP_DIR/postgres_vectordb_$TIMESTAMP.sql"
@@ -70,7 +68,7 @@ for f in "${CONFIG_FILES[@]}"; do
   fi
 done
 
-# 5. Optionnel : suppression des anciens backups
+# 5. Nettoyage des anciens backups
 if [ "$RETENTION_DAYS" -gt 0 ]; then
   echo "  • Nettoyage des backups de plus de $RETENTION_DAYS jours"
   find "$BACKUP_BASE_DIR" -maxdepth 1 -type d \
