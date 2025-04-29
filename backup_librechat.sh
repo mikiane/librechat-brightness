@@ -18,71 +18,72 @@ fi
 ### CONFIGURATION – adapté à votre environnement ###
 # Répertoire où stocker les backups (par défaut le répertoire courant)
 BACKUP_BASE_DIR="${BACKUP_BASE_DIR:-.}"
-
-# Convertit BACKUP_BASE_DIR en chemin absolu
+# Convertit en chemin absolu
 ABS_BACKUP_BASE_DIR="$(cd "$BACKUP_BASE_DIR" && pwd)"
-
-# Noms des conteneurs Docker (services par défaut LibreChat)
+# Conteneurs Docker
 MONGO_CONTAINER="${MONGO_CONTAINER:-chat-mongodb}"
 PG_CONTAINER="${PG_CONTAINER:-vectordb}"
+# Paramètres PostgreSQL à récupérer depuis .env
+PG_USER="${POSTGRES_USER:-}"
+PG_DB="${POSTGRES_DB:-}"
 
-# Paramètres PostgreSQL (utilisateur par défaut postgres, sans mot de passe)
-PG_USER="${PG_USER:-postgres}"
-# On utilise pg_dumpall pour sauvegarder toutes les bases
-
-# Volumes Docker à sauvegarder (modifiez si besoin)
+# Volumes Docker à sauvegarder
 VOLUMES=("librechat_uploads")
-
-# Fichiers de config à copier (dans la racine du projet)
-CONFIG_FILES=(".env" "docker-compose.yml")
-
-# Rétention : supprimer les backups de plus de N jours (mettre 0 pour désactiver)
+# Fichiers de config à copier\CONFIG_FILES=(".env" "docker-compose.yml")
+# Rétention des backups (jours)
 RETENTION_DAYS=30
-### FIN DE LA CONFIG ###
+
+### Vérification des variables PostgreSQL ###
+if [ -z "$PG_USER" ] || [ -z "$PG_DB" ]; then
+  echo "⚠️  POSTGRES_USER et POSTGRES_DB doivent être définis dans .env"
+  echo "    Ignorer la sauvegarde PostgreSQL."
+  SKIP_PG=true
+else
+  SKIP_PG=false
+fi
 
 TIMESTAMP="$(date +'%Y-%m-%d_%Hh%M')"
 BACKUP_DIR="$ABS_BACKUP_BASE_DIR/backup_$TIMESTAMP"
+mkdir -p "$BACKUP_DIR"
 
 echo "🗃️  Démarrage du backup LibreChat : $TIMESTAMP"
 
-# Création du répertoire de backup
-mkdir -p "$BACKUP_DIR"
-
-# 1. Sauvegarde MongoDB (sans authentification)
+# 1. MongoDB
 echo "  • Sauvegarde MongoDB ($MONGO_CONTAINER)…"
 docker exec -i "$MONGO_CONTAINER" \
   mongodump --archive --gzip --db LibreChat \
   > "$BACKUP_DIR/mongo_LibreChat_$TIMESTAMP.gz"
- 
-# 2. Sauvegarde PostgreSQL vectordb (toutes bases)
-echo "  • Sauvegarde PostgreSQL ($PG_CONTAINER) – dump de toutes les bases…"
-docker exec -i "$PG_CONTAINER" bash -c \
-  "pg_dumpall --username=$PG_USER" \
-  > "$BACKUP_DIR/postgres_all_$TIMESTAMP.sql"
 
-# 3. Sauvegarde des volumes Docker
+# 2. PostgreSQL
+if [ "$SKIP_PG" = false ]; then
+  echo "  • Sauvegarde PostgreSQL ($PG_CONTAINER) base $PG_DB…"
+  docker exec -i "$PG_CONTAINER" \
+    pg_dump --username="$PG_USER" --dbname="$PG_DB" \
+    > "$BACKUP_DIR/postgres_${PG_DB}_$TIMESTAMP.sql"
+else
+  echo "  • Sauvegarde PostgreSQL sautée"
+fi
+
+# 3. Volumes Docker
+echo "  • Sauvegarde des volumes Docker"
 for vol in "${VOLUMES[@]}"; do
-  echo "  • Sauvegarde volume Docker : $vol"
+  echo "    - $vol"
   docker run --rm \
     -v "$vol":/data \
     -v "$BACKUP_DIR":/backup \
     alpine sh -c "tar czf /backup/vol_${vol}_${TIMESTAMP}.tgz -C /data ."
 done
 
-# 4. Copie des fichiers de configuration
+# 4. Fichiers de config
 echo "  • Copie des fichiers de configuration"
 for f in "${CONFIG_FILES[@]}"; do
-  if [ -f "$f" ]; then
-    cp "$f" "$BACKUP_DIR/"
-  else
-    echo "    ⚠️  Fichier non trouvé : $f"
-  fi
+  [ -f "$f" ] && cp "$f" "$BACKUP_DIR/" || echo "    ⚠️  Fichier non trouvé : $f"
 done
 
-# 5. Nettoyage des anciens backups
+# 5. Nettoyage
 if [ "$RETENTION_DAYS" -gt 0 ]; then
-  echo "  • Nettoyage des backups de plus de $RETENTION_DAYS jours"
+  echo "  • Suppression des backups de plus de $RETENTION_DAYS jours"
   find "$ABS_BACKUP_BASE_DIR" -maxdepth 1 -type d -mtime +"$RETENTION_DAYS" -exec rm -rf {} \;
 fi
 
-echo "✅ Backup terminé. Fichiers stockés dans $BACKUP_DIR"
+echo "✅ Backup terminé. Dossiers dans $BACKUP_DIR"
