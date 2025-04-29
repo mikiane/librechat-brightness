@@ -19,13 +19,16 @@ fi
 # Répertoire où stocker les backups (par défaut le répertoire courant)
 BACKUP_BASE_DIR="${BACKUP_BASE_DIR:-.}"
 
-# Noms des conteneurs Docker (service par défaut LibreChat)
+# Convertit BACKUP_BASE_DIR en chemin absolu
+ABS_BACKUP_BASE_DIR="$(cd "$BACKUP_BASE_DIR" && pwd)"
+
+# Noms des conteneurs Docker (services par défaut LibreChat)
 MONGO_CONTAINER="${MONGO_CONTAINER:-chat-mongodb}"
 PG_CONTAINER="${PG_CONTAINER:-vectordb}"
 
-# Paramètres PostgreSQL (chargés depuis .env si présents)
-PG_USER="${PG_USER:-${POSTGRES_USER:-}}"
-PG_DB="${PG_DB:-${POSTGRES_DB:-}}"
+# Paramètres PostgreSQL (par défaut sans mot de passe)
+PG_USER="${PG_USER:-postgres}"
+PG_DB="${PG_DB:-vectordb}"
 
 # Volumes Docker à sauvegarder (modifiez si besoin)
 VOLUMES=("librechat_uploads")
@@ -38,7 +41,7 @@ RETENTION_DAYS=30
 ### FIN DE LA CONFIG ###
 
 TIMESTAMP="$(date +'%Y-%m-%d_%Hh%M')"
-BACKUP_DIR="$BACKUP_BASE_DIR/backup_$TIMESTAMP"
+BACKUP_DIR="$ABS_BACKUP_BASE_DIR/backup_$TIMESTAMP"
 
 echo "🗃️  Démarrage du backup LibreChat : $TIMESTAMP"
 
@@ -69,7 +72,7 @@ for vol in "${VOLUMES[@]}"; do
   docker run --rm \
     -v "$vol":/data \
     -v "$BACKUP_DIR":/backup \
-    alpine sh -c "tar czf /backup/vol_${vol}_$TIMESTAMP.tgz -C /data ."
+    alpine sh -c "tar czf /backup/vol_${vol}_${TIMESTAMP}.tgz -C /data ."
 done
 
 # 4. Copie des fichiers de configuration
@@ -85,8 +88,7 @@ done
 # 5. Nettoyage des anciens backups
 if [ "$RETENTION_DAYS" -gt 0 ]; then
   echo "  • Nettoyage des backups de plus de $RETENTION_DAYS jours"
-  find "$BACKUP_BASE_DIR" -maxdepth 1 -type d -mtime +"$RETENTION_DAYS" -exec rm -rf {} \\
-    \;
+  find "$ABS_BACKUP_BASE_DIR" -maxdepth 1 -type d -mtime +"$RETENTION_DAYS" -exec rm -rf {} \;
 fi
 
 echo "✅ Backup terminé. Fichiers stockés dans $BACKUP_DIR"
