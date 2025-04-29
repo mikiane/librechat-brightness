@@ -26,9 +26,9 @@ ABS_BACKUP_BASE_DIR="$(cd "$BACKUP_BASE_DIR" && pwd)"
 MONGO_CONTAINER="${MONGO_CONTAINER:-chat-mongodb}"
 PG_CONTAINER="${PG_CONTAINER:-vectordb}"
 
-# Paramètres PostgreSQL (par défaut sans mot de passe)
-PG_USER="${PG_USER:-postgres}"
-PG_DB="${PG_DB:-vectordb}"
+# Paramètres PostgreSQL (chargés depuis .env ou variables d'environnement)
+PG_USER="${PG_USER:-${POSTGRES_USER:-}}"
+PG_DB="${PG_DB:-${POSTGRES_DB:-}}"
 
 # Volumes Docker à sauvegarder (modifiez si besoin)
 VOLUMES=("librechat_uploads")
@@ -57,7 +57,7 @@ docker exec -i "$MONGO_CONTAINER" \
 # 2. Sauvegarde PostgreSQL vectordb (sans mot de passe)
 echo "  • Sauvegarde PostgreSQL ($PG_CONTAINER)…"
 if [ -z "$PG_DB" ]; then
-  echo "    ⚠️  POSTGRES_DB non défini, passez-le via .env ou variable PG_DB"
+  echo "    ⚠️  POSTGRES_DB non défini, passez-le via .env ou variable POSTGRES_DB"
 else
   cmd="pg_dump"
   [ -n "$PG_USER" ] && cmd="$cmd --username=$PG_USER"
