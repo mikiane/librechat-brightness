@@ -4,50 +4,63 @@
 
 set -euo pipefail
 
+### Chargement des variables d'environnement depuis .env si présent ###
+if [ -f .env ]; then
+  echo "⏳ Chargement des variables d'environnement depuis .env"
+  set -o allexport
+  source .env
+  set +o allexport
+fi
+
 ### CONFIGURATION – adapté à votre environnement ###
+# Répertoire où stocker les backups (par défaut le répertoire courant)
+BACKUP_BASE_DIR="${BACKUP_BASE_DIR:-.}"
 
-# Répertoire où stocker les backups
-BACKUP_BASE_DIR="${BACKUP_BASE_DIR:-/var/backups/librechat}"
-
-# Noms des conteneurs Docker
+# Noms des conteneurs Docker (service par défaut LibreChat)
 MONGO_CONTAINER="${MONGO_CONTAINER:-chat-mongodb}"
 PG_CONTAINER="${PG_CONTAINER:-vectordb}"
 
-# Paramètres PostgreSQL (on suppose que ces variables sont définies dans votre .env)
-PG_USER="${PG_USER:-$POSTGRES_USER}"
-PG_DB="${PG_DB:-$POSTGRES_DB}"
-PG_PASSWORD="${PG_PASSWORD:-$POSTGRES_PASSWORD}"
+# Paramètres PostgreSQL (chargés depuis .env si présents)
+PG_USER="${PG_USER:-${POSTGRES_USER:-}}
+PG_DB="${PG_DB:-${POSTGRES_DB:-}}"
 
-# Volumes Docker à sauvegarder (modifiez la liste si vous en avez d’autres)
+# Volumes Docker à sauvegarder (modifiez si besoin)
 VOLUMES=("librechat_uploads")
 
-# Fichiers de config à copier (dans la racine de votre projet)
+# Fichiers de config à copier (dans la racine du projet)
 CONFIG_FILES=(".env" "docker-compose.yml")
 
 # Rétention : supprimer les backups de plus de N jours (mettre 0 pour désactiver)
 RETENTION_DAYS=30
-
 ### FIN DE LA CONFIG ###
 
-TIMESTAMP="$(date +'%Y-%m-%d_%Hh%M')" 
-BACKUP_DIR="$BACKUP_BASE_DIR/$TIMESTAMP"
+TIMESTAMP="$(date +'%Y-%m-%d_%Hh%M')"
+BACKUP_DIR="$BACKUP_BASE_DIR/backup_$TIMESTAMP"
 
 echo "🗃️  Démarrage du backup LibreChat : $TIMESTAMP"
 
 # Création du répertoire de backup
 mkdir -p "$BACKUP_DIR"
 
-# 1. Sauvegarde MongoDB
+# 1. Sauvegarde MongoDB (sans authentification)
 echo "  • Sauvegarde MongoDB ($MONGO_CONTAINER)…"
 docker exec -i "$MONGO_CONTAINER" \
   mongodump --archive --gzip --db LibreChat \
   > "$BACKUP_DIR/mongo_LibreChat_$TIMESTAMP.gz"
 
-# 2. Sauvegarde PostgreSQL vectordb
+# 2. Sauvegarde PostgreSQL vectordb (sans mot de passe)
 echo "  • Sauvegarde PostgreSQL ($PG_CONTAINER)…"
-docker exec -i "$PG_CONTAINER" /bin/bash -c \
-  "export PGPASSWORD='$PG_PASSWORD'; pg_dump --username='$PG_USER' --dbname='$PG_DB'" \
-  > "$BACKUP_DIR/postgres_vectordb_$TIMESTAMP.sql"
+if [ -z "$PG_DB" ]; then
+  echo "    ⚠️  POSTGRES_DB non défini, passez-le via .env ou variable PG_DB"
+else
+  dump_cmd="pg_dump"
+  if [ -n "$PG_USER" ]; then
+    dump_cmd="$dump_cmd --username=$PG_USER"
+  fi
+  dump_cmd="$dump_cmd --dbname=$PG_DB"
+  docker exec -i "$PG_CONTAINER" bash -c "$dump_cmd" \
+    > "$BACKUP_DIR/postgres_vectordb_$TIMESTAMP.sql"
+fi
 
 # 3. Sauvegarde des volumes Docker
 for vol in "${VOLUMES[@]}"; do
@@ -72,7 +85,7 @@ done
 if [ "$RETENTION_DAYS" -gt 0 ]; then
   echo "  • Nettoyage des backups de plus de $RETENTION_DAYS jours"
   find "$BACKUP_BASE_DIR" -maxdepth 1 -type d \
-    -mtime +"$RETENTION_DAYS" -exec rm -rf {} \;
+    -mtime +"$RETENTION_DAYS" -exec rm -rf {} \\;
 fi
 
 echo "✅ Backup terminé. Fichiers stockés dans $BACKUP_DIR"
