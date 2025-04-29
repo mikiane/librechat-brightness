@@ -69,17 +69,6 @@ services:
     env_file:
       - .env
 
-  fetchpage:
-    image: python:3.10-slim
-    working_dir: /app
-    volumes:
-      - /home/michel/brightness-chat/LibreChat/mcp-servers/fetchpage:/app:ro
-    command: >
-      sh -c "pip install --no-cache-dir fastmcp mcp httpx playwright &&
-             python mcp_server.py"
-    networks:
-      - backend
-
 networks:
   backend:
     external: true
