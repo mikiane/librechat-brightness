@@ -26,9 +26,9 @@ ABS_BACKUP_BASE_DIR="$(cd "$BACKUP_BASE_DIR" && pwd)"
 MONGO_CONTAINER="${MONGO_CONTAINER:-chat-mongodb}"
 PG_CONTAINER="${PG_CONTAINER:-vectordb}"
 
-# Paramètres PostgreSQL (chargés depuis .env ou variables d'environnement)
-PG_USER="${PG_USER:-${POSTGRES_USER:-}}"
-PG_DB="${PG_DB:-${POSTGRES_DB:-}}"
+# Paramètres PostgreSQL (utilisateur par défaut postgres, sans mot de passe)
+PG_USER="${PG_USER:-postgres}"
+# On utilise pg_dumpall pour sauvegarder toutes les bases
 
 # Volumes Docker à sauvegarder (modifiez si besoin)
 VOLUMES=("librechat_uploads")
@@ -53,18 +53,12 @@ echo "  • Sauvegarde MongoDB ($MONGO_CONTAINER)…"
 docker exec -i "$MONGO_CONTAINER" \
   mongodump --archive --gzip --db LibreChat \
   > "$BACKUP_DIR/mongo_LibreChat_$TIMESTAMP.gz"
-
-# 2. Sauvegarde PostgreSQL vectordb (sans mot de passe)
-echo "  • Sauvegarde PostgreSQL ($PG_CONTAINER)…"
-if [ -z "$PG_DB" ]; then
-  echo "    ⚠️  POSTGRES_DB non défini, passez-le via .env ou variable POSTGRES_DB"
-else
-  cmd="pg_dump"
-  [ -n "$PG_USER" ] && cmd="$cmd --username=$PG_USER"
-  cmd="$cmd --dbname=$PG_DB"
-  docker exec -i "$PG_CONTAINER" bash -c "$cmd" \
-    > "$BACKUP_DIR/postgres_vectordb_$TIMESTAMP.sql"
-fi
+ 
+# 2. Sauvegarde PostgreSQL vectordb (toutes bases)
+echo "  • Sauvegarde PostgreSQL ($PG_CONTAINER) – dump de toutes les bases…"
+docker exec -i "$PG_CONTAINER" bash -c \
+  "pg_dumpall --username=$PG_USER" \
+  > "$BACKUP_DIR/postgres_all_$TIMESTAMP.sql"
 
 # 3. Sauvegarde des volumes Docker
 for vol in "${VOLUMES[@]}"; do
