@@ -4,12 +4,15 @@
 
 set -euo pipefail
 
-### Chargement des variables d'environnement depuis .env si présent ###
+### Chargement safe des variables d'environnement depuis .env ###
 if [ -f .env ]; then
   echo "⏳ Chargement des variables d'environnement depuis .env"
-  set -o allexport
-  source .env
-  set +o allexport
+  while IFS= read -r line; do
+    # Ignorer commentaires et lignes vides
+    [[ "$line" =~ ^[[:space:]]*# ]] && continue
+    [[ ! "$line" =~ ^[[:space:]]*[A-Za-z_][A-Za-z0-9_]*= ]] && continue
+    export "$line"
+  done < .env
 fi
 
 ### CONFIGURATION – adapté à votre environnement ###
@@ -21,7 +24,7 @@ MONGO_CONTAINER="${MONGO_CONTAINER:-chat-mongodb}"
 PG_CONTAINER="${PG_CONTAINER:-vectordb}"
 
 # Paramètres PostgreSQL (chargés depuis .env si présents)
-PG_USER="${PG_USER:-${POSTGRES_USER:-}}
+PG_USER="${PG_USER:-${POSTGRES_USER:-}}"
 PG_DB="${PG_DB:-${POSTGRES_DB:-}}"
 
 # Volumes Docker à sauvegarder (modifiez si besoin)
@@ -53,12 +56,10 @@ echo "  • Sauvegarde PostgreSQL ($PG_CONTAINER)…"
 if [ -z "$PG_DB" ]; then
   echo "    ⚠️  POSTGRES_DB non défini, passez-le via .env ou variable PG_DB"
 else
-  dump_cmd="pg_dump"
-  if [ -n "$PG_USER" ]; then
-    dump_cmd="$dump_cmd --username=$PG_USER"
-  fi
-  dump_cmd="$dump_cmd --dbname=$PG_DB"
-  docker exec -i "$PG_CONTAINER" bash -c "$dump_cmd" \
+  cmd="pg_dump"
+  [ -n "$PG_USER" ] && cmd="$cmd --username=$PG_USER"
+  cmd="$cmd --dbname=$PG_DB"
+  docker exec -i "$PG_CONTAINER" bash -c "$cmd" \
     > "$BACKUP_DIR/postgres_vectordb_$TIMESTAMP.sql"
 fi
 
@@ -84,8 +85,8 @@ done
 # 5. Nettoyage des anciens backups
 if [ "$RETENTION_DAYS" -gt 0 ]; then
   echo "  • Nettoyage des backups de plus de $RETENTION_DAYS jours"
-  find "$BACKUP_BASE_DIR" -maxdepth 1 -type d \
-    -mtime +"$RETENTION_DAYS" -exec rm -rf {} \\;
+  find "$BACKUP_BASE_DIR" -maxdepth 1 -type d -mtime +"$RETENTION_DAYS" -exec rm -rf {} \\
+    \;
 fi
 
 echo "✅ Backup terminé. Fichiers stockés dans $BACKUP_DIR"
