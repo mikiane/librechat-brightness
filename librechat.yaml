@@ -66,3 +66,21 @@ endpoints:
       forcePrompt: false
       dropParams: ["stop", "frequency_penalty"]
       modelDisplayLabel: "Perplexity"
+
+
+
+  agents:
+    # (optionnel) désactivez le builder si vous ne souhaitez pas l’interface visuelle
+    disableBuilder: false
+
+    # Activez ici les capacités disponibles pour vos agents
+    # Par défaut : ["execute_code","file_search","actions","tools","artifacts","ocr","chain"]
+    capabilities:
+      - "execute_code"   # exécution de code (Code Interpreter)
+      - "file_search"    # recherche dans les fichiers
+      - "actions"        # création d’actions via OpenAPI
+      - "tools"          # accès aux outils builtin (calculator, web search…)
+      - "artifacts"      # artifacts / UI générative (Mermaid, React…)
+      - "ocr"            # extraction de texte dans les images
+      - "chain"          # chaîne de plusieurs agents
+
